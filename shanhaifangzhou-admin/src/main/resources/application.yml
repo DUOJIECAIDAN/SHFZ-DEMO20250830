@@ -7,6 +7,9 @@ spring:
   application:
     name: shanhaifangzhou-admin
   
+  profiles:
+    active: dev
+  
   # 数据源配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -38,82 +41,116 @@ spring:
         url-pattern: /druid/*
         reset-enable: false
         login-username: admin
-        login-password: 123456
-
+        login-password: admin
+  
   # Redis配置
-  redis:
-    host: localhost
-    port: 6379
-    password: 
-    database: 0
-    timeout: 10s
-    lettuce:
-      pool:
-        min-idle: 0
-        max-idle: 8
-        max-active: 8
-        max-wait: -1ms
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      database: 0
+      timeout: 10000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
 
-# MyBatis Plus配置
+# MyBatis-Plus配置
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto
-      logic-delete-field: delFlag
+      logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
-  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  mapper-locations: classpath*:mapper/**/*.xml
 
 # JetCache配置
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false
-  hidePackages: com.shanhaifangzhou
   local:
     default:
       type: linkedhashmap
-      keyConvertor: fastjson2
-      valueEncoder: java
-      valueDecoder: java
-      limit: 100
-      expireAfterWriteInMillis: 100000
+      keyConvertor: fastjson
   remote:
     default:
       type: redis.lettuce
-      keyConvertor: fastjson2
+      keyConvertor: fastjson
       valueEncoder: java
       valueDecoder: java
       poolConfig:
         minIdle: 5
         maxIdle: 20
         maxTotal: 50
-      host: ${spring.redis.host}
-      port: ${spring.redis.port}
-      password: ${spring.redis.password}
-      database: ${spring.redis.database}
+      host: ${spring.data.redis.host}
+      port: ${spring.data.redis.port}
+      password: ${spring.data.redis.password}
+      database: ${spring.data.redis.database}
 
 # JWT配置
 jwt:
-  secret: shanhaifangzhou-admin-secret-key-2024
+  secret: shanhaifangzhou-jwt-secret-key-2024
   expiration: 86400
+  header: Authorization
+  prefix: Bearer 
 
-# Swagger配置
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  api-docs:
-    path: /v3/api-docs
-  packages-to-scan: com.shanhaifangzhou
+# Knife4j配置
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enable-swagger-models: true
+    enable-document-manage: true
+    swagger-model-name: 实体类列表
+    enable-version: false
+    enable-reload-cache-parameter: false
+    enable-after-script: true
+    enable-filter-multipart-api-method-type: POST
+    enable-filter-multipart-apis: false
+    enable-request-cache: true
+    enable-host: false
+    enable-host-text: ""
+    enable-home-custom: false
+    home-custom-path: ""
+    enable-search: true
+    enable-footer: false
+    enable-footer-custom: true
+    footer-custom-content: Copyright © 2024 山海方舟
+    enable-dynamic-parameter: false
+    enable-debug: true
+    enable-open-api: false
+    enable-group: true
 
 # 日志配置
 logging:
   level:
     com.shanhaifangzhou: debug
     org.springframework.security: debug
+    org.springframework.web: debug
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/shanhaifangzhou-admin.log

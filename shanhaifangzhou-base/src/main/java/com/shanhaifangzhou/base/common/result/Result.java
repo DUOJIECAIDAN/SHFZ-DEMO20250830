@@ -1,32 +1,40 @@
 package com.shanhaifangzhou.base.common.result;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 统一响应结果类
- * 
+ * 统一响应结果
+ *
  * @author shanhaifangzhou
  * @since 2024-01-01
  */
 @Data
-@Schema(description = "统一响应结果")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "响应码")
+    /**
+     * 响应码
+     */
     private Integer code;
 
-    @Schema(description = "响应消息")
+    /**
+     * 响应消息
+     */
     private String message;
 
-    @Schema(description = "响应数据")
+    /**
+     * 响应数据
+     */
     private T data;
 
-    @Schema(description = "时间戳")
+    /**
+     * 时间戳
+     */
     private Long timestamp;
 
     public Result() {
@@ -87,7 +95,7 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 失败响应（自定义错误码和消息）
+     * 失败响应（自定义响应码和消息）
      */
     public static <T> Result<T> error(Integer code, String message) {
         return new Result<>(code, message);

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shanhaifangzhou.admin.user.mapper.SysUserMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.shanhaifangzhou.admin.user.entity.SysUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="BIGINT"/>
+        <result column="post_id" property="postId" jdbcType="BIGINT"/>
+        <result column="user_type" property="userType" jdbcType="TINYINT"/>
+        <result column="login_type" property="loginType" jdbcType="TINYINT"/>
+        <result column="is_first_login" property="isFirstLogin" jdbcType="TINYINT"/>
+        <result column="password_error_count" property="passwordErrorCount" jdbcType="INTEGER"/>
+        <result column="password_error_time" property="passwordErrorTime" jdbcType="TIMESTAMP"/>
+        <result column="lock_time" property="lockTime" jdbcType="TIMESTAMP"/>
+        <result column="lock_reason" property="lockReason" jdbcType="VARCHAR"/>
+        <result column="online_status" property="onlineStatus" jdbcType="TINYINT"/>
+        <result column="last_active_time" property="lastActiveTime" jdbcType="TIMESTAMP"/>
+        <result column="user_source" property="userSource" jdbcType="TINYINT"/>
+        <result column="ext_data" property="extData" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+        id, username, password, nickname, email, phone, avatar, gender, status,
+        last_login_time, last_login_ip, dept_id, post_id, user_type, login_type,
+        is_first_login, password_error_count, password_error_time, lock_time,
+        lock_reason, online_status, last_active_time, user_source, ext_data,
+        create_time, update_time, create_by, update_by, deleted, remark
+    </sql>
+
+    <!-- 分页查询用户列表 -->
+    <select id="selectUserPage" resultMap="BaseResultMap">
+        SELECT
+            u.id, u.username, u.nickname, u.email, u.phone, u.avatar, u.gender, u.status,
+            u.last_login_time, u.last_login_ip, u.dept_id, u.post_id, u.user_type,
+            u.login_type, u.is_first_login, u.online_status, u.last_active_time,
+            u.create_time, u.update_time, u.create_by, u.update_by, u.remark,
+            d.dept_name, p.post_name
+        FROM sys_user u
+        LEFT JOIN sys_dept d ON u.dept_id = d.id
+        LEFT JOIN sys_post p ON u.post_id = p.id
+        <where>
+            u.deleted = 0
+            <if test="query.username != null and query.username != ''">
+                AND u.username LIKE CONCAT('%', #{query.username}, '%')
+            </if>
+            <if test="query.nickname != null and query.nickname != ''">
+                AND u.nickname LIKE CONCAT('%', #{query.nickname}, '%')
+            </if>
+            <if test="query.email != null and query.email != ''">
+                AND u.email LIKE CONCAT('%', #{query.email}, '%')
+            </if>
+            <if test="query.phone != null and query.phone != ''">
+                AND u.phone LIKE CONCAT('%', #{query.phone}, '%')
+            </if>
+            <if test="query.status != null">
+                AND u.status = #{query.status}
+            </if>
+            <if test="query.deptId != null">
+                AND u.dept_id = #{query.deptId}
+            </if>
+            <if test="query.roleId != null">
+                AND EXISTS (
+                    SELECT 1 FROM sys_user_role ur WHERE ur.user_id = u.id AND ur.role_id = #{query.roleId}
+                )
+            </if>
+            <if test="query.userType != null">
+                AND u.user_type = #{query.userType}
+            </if>
+            <if test="query.onlineStatus != null">
+                AND u.online_status = #{query.onlineStatus}
+            </if>
+            <if test="query.startTime != null">
+                AND u.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND u.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+        ORDER BY u.create_time DESC
+    </select>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE username = #{username} AND deleted = 0
+    </select>
+
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <!-- 根据手机号查询用户 -->
+    <select id="selectByPhone" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE phone = #{phone} AND deleted = 0
+    </select>
+
+    <!-- 根据部门ID查询用户列表 -->
+    <select id="selectByDeptId" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE dept_id = #{deptId} AND deleted = 0 AND status = 1
+    </select>
+
+    <!-- 根据角色ID查询用户列表 -->
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        SELECT
+            u.id, u.username, u.nickname, u.email, u.phone, u.avatar, u.gender, u.status,
+            u.dept_id, u.create_time, u.update_time
+        FROM sys_user u
+        INNER JOIN sys_user_role ur ON u.id = ur.user_id
+        WHERE ur.role_id = #{roleId} AND u.deleted = 0 AND u.status = 1
+    </select>
+
+    <!-- 查询在线用户列表 -->
+    <select id="selectOnlineUsers" resultMap="BaseResultMap">
+        SELECT
+            u.id, u.username, u.nickname, u.email, u.phone, u.avatar, u.gender,
+            u.dept_id, u.last_login_time, u.last_login_ip, u.last_active_time,
+            d.dept_name
+        FROM sys_user u
+        LEFT JOIN sys_dept d ON u.dept_id = d.id
+        WHERE u.online_status = 1 AND u.deleted = 0 AND u.status = 1
+        ORDER BY u.last_active_time DESC
+    </select>
+
+    <!-- 更新用户最后登录信息 -->
+    <update id="updateLastLoginInfo">
+        UPDATE sys_user
+        SET last_login_time = #{lastLoginTime},
+            last_login_ip = #{lastLoginIp},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户在线状态 -->
+    <update id="updateOnlineStatus">
+        UPDATE sys_user
+        SET online_status = #{onlineStatus},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户最后活跃时间 -->
+    <update id="updateLastActiveTime">
+        UPDATE sys_user
+        SET last_active_time = NOW(),
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户密码错误信息 -->
+    <update id="updatePasswordErrorInfo">
+        UPDATE sys_user
+        SET password_error_count = #{passwordErrorCount},
+            password_error_time = #{passwordErrorTime},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 锁定用户账号 -->
+    <update id="lockUser">
+        UPDATE sys_user
+        SET lock_time = #{lockTime},
+            lock_reason = #{lockReason},
+            status = 0,
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 解锁用户账号 -->
+    <update id="unlockUser">
+        UPDATE sys_user
+        SET lock_time = NULL,
+            lock_reason = NULL,
+            status = 1,
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 重置用户密码错误信息 -->
+    <update id="resetPasswordErrorInfo">
+        UPDATE sys_user
+        SET password_error_count = 0,
+            password_error_time = NULL,
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据条件查询用户数量 -->
+    <select id="selectUserCount" resultType="long">
+        SELECT COUNT(*)
+        FROM sys_user u
+        <where>
+            u.deleted = 0
+            <if test="query.username != null and query.username != ''">
+                AND u.username LIKE CONCAT('%', #{query.username}, '%')
+            </if>
+            <if test="query.nickname != null and query.nickname != ''">
+                AND u.nickname LIKE CONCAT('%', #{query.nickname}, '%')
+            </if>
+            <if test="query.email != null and query.email != ''">
+                AND u.email LIKE CONCAT('%', #{query.email}, '%')
+            </if>
+            <if test="query.phone != null and query.phone != ''">
+                AND u.phone LIKE CONCAT('%', #{query.phone}, '%')
+            </if>
+            <if test="query.status != null">
+                AND u.status = #{query.status}
+            </if>
+            <if test="query.deptId != null">
+                AND u.dept_id = #{query.deptId}
+            </if>
+            <if test="query.roleId != null">
+                AND EXISTS (
+                    SELECT 1 FROM sys_user_role ur WHERE ur.user_id = u.id AND ur.role_id = #{query.roleId}
+                )
+            </if>
+            <if test="query.userType != null">
+                AND u.user_type = #{query.userType}
+            </if>
+            <if test="query.onlineStatus != null">
+                AND u.online_status = #{query.onlineStatus}
+            </if>
+            <if test="query.startTime != null">
+                AND u.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND u.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询用户统计信息 -->
+    <select id="selectUserStats" resultType="java.util.Map">
+        SELECT
+            COUNT(*) as totalUsers,
+            SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as enabledUsers,
+            SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as disabledUsers,
+            SUM(CASE WHEN online_status = 1 THEN 1 ELSE 0 END) as onlineUsers,
+            SUM(CASE WHEN user_type = 0 THEN 1 ELSE 0 END) as systemUsers,
+            SUM(CASE WHEN user_type = 1 THEN 1 ELSE 0 END) as businessUsers
+        FROM sys_user
+        WHERE deleted = 0
+    </select>
+
+    <!-- 查询用户登录统计 -->
+    <select id="selectUserLoginStats" resultType="java.util.Map">
+        SELECT
+            DATE(last_login_time) as loginDate,
+            COUNT(*) as loginCount
+        FROM sys_user
+        WHERE deleted = 0
+            AND last_login_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        GROUP BY DATE(last_login_time)
+        ORDER BY loginDate DESC
+    </select>
+
+</mapper>
