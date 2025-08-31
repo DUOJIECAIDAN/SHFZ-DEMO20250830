@@ -1,29 +1,69 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import { useUserStore } from '@/store/modules/user'
-import { usePermissionStore } from '@/store/modules/permission'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { getMenuList } from '@/api/menu'
+import type { AppRouteRecordRaw } from '@/router'
+import { asyncRoutes, constantRoutes } from '@/router'
 
-// 路由元信息类型
-export interface RouteMeta {
-  title?: string
-  icon?: string
-  hidden?: boolean
-  roles?: string[]
-  permissions?: string[]
-  keepAlive?: boolean
-  breadcrumb?: boolean
-}
+export const usePermissionStore = defineStore('permission', () => {
+  // 状态
+  const routes = ref<AppRouteRecordRaw[]>([])
+  const addRoutes = ref<AppRouteRecordRaw[]>([])
 
-// 扩展路由记录类型
-export interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
-  meta?: RouteMeta
-  children?: AppRouteRecordRaw[]
-}
+  // 生成路由
+  const generateRoutes = async () => {
+    try {
+      // 获取菜单列表
+      const { data } = await getMenuList()
+      const accessedRoutes = filterAsyncRoutes(asyncRoutes, data)
+      addRoutes.value = accessedRoutes
+      routes.value = constantRoutes.concat(accessedRoutes)
+      return accessedRoutes
+    } catch (error) {
+      console.error('生成路由失败:', error)
+      return []
+    }
+  }
 
-// 路由配置
-const routes: AppRouteRecordRaw[] = [
+  // 过滤异步路由
+  const filterAsyncRoutes = (routes: AppRouteRecordRaw[], menus: any[]): AppRouteRecordRaw[] => {
+    const res: AppRouteRecordRaw[] = []
+
+    routes.forEach(route => {
+      const tmp = { ...route }
+      if (hasPermission(tmp, menus)) {
+        if (tmp.children) {
+          tmp.children = filterAsyncRoutes(tmp.children, menus)
+        }
+        res.push(tmp)
+      }
+    })
+
+    return res
+  }
+
+  // 检查权限
+  const hasPermission = (route: AppRouteRecordRaw, menus: any[]): boolean => {
+    if (route.meta && route.meta.permissions) {
+      return menus.some(menu => 
+        route.meta?.permissions?.includes(menu.perms)
+      )
+    }
+    return true
+  }
+
+  return {
+    // 状态
+    routes,
+    addRoutes,
+    // 方法
+    generateRoutes,
+    filterAsyncRoutes,
+    hasPermission,
+  }
+})
+
+// 静态路由
+export const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -55,6 +95,10 @@ const routes: AppRouteRecordRaw[] = [
       },
     ],
   },
+]
+
+// 动态路由
+export const asyncRoutes: AppRouteRecordRaw[] = [
   {
     path: '/system',
     name: 'System',
@@ -127,72 +171,4 @@ const routes: AppRouteRecordRaw[] = [
       },
     ],
   },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('@/views/error/404.vue'),
-    meta: {
-      title: '404',
-      hidden: true,
-    },
-  },
 ]
-
-// 创建路由实例
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-  scrollBehavior: () => ({ left: 0, top: 0 }),
-})
-
-// 路由守卫
-router.beforeEach(async (to, from, next) => {
-  NProgress.start()
-  
-  const userStore = useUserStore()
-  const permissionStore = usePermissionStore()
-  
-  // 设置页面标题
-  document.title = to.meta?.title ? `${to.meta.title} - 山海方舟管理系统` : '山海方舟管理系统'
-  
-  // 检查是否需要登录
-  if (to.path === '/login') {
-    if (userStore.token) {
-      next({ path: '/' })
-    } else {
-      next()
-    }
-    return
-  }
-  
-  // 检查是否已登录
-  if (!userStore.token) {
-    next({ path: '/login', query: { redirect: to.fullPath } })
-    return
-  }
-  
-  // 检查是否已获取用户信息
-  if (!userStore.userInfo) {
-    try {
-      await userStore.getUserInfo()
-      // 生成动态路由
-      const accessRoutes = await permissionStore.generateRoutes()
-      accessRoutes.forEach(route => {
-        router.addRoute(route)
-      })
-      next({ ...to, replace: true })
-    } catch (error) {
-      userStore.logout()
-      next({ path: '/login', query: { redirect: to.fullPath } })
-    }
-    return
-  }
-  
-  next()
-})
-
-router.afterEach(() => {
-  NProgress.done()
-})
-
-export default router

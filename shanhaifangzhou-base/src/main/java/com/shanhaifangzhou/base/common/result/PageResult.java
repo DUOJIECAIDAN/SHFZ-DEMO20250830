@@ -1,37 +1,57 @@
 package com.shanhaifangzhou.base.common.result;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * 分页响应结果类
- * 
+ * 分页结果
+ *
  * @author shanhaifangzhou
  * @since 2024-01-01
  */
 @Data
-@Schema(description = "分页响应结果")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "数据列表")
+    /**
+     * 数据列表
+     */
     private List<T> records;
 
-    @Schema(description = "总记录数")
+    /**
+     * 总记录数
+     */
     private Long total;
 
-    @Schema(description = "当前页码")
+    /**
+     * 当前页码
+     */
     private Long current;
 
-    @Schema(description = "每页大小")
+    /**
+     * 每页大小
+     */
     private Long size;
 
-    @Schema(description = "总页数")
+    /**
+     * 总页数
+     */
     private Long pages;
+
+    /**
+     * 是否有上一页
+     */
+    private Boolean hasPrevious;
+
+    /**
+     * 是否有下一页
+     */
+    private Boolean hasNext;
 
     public PageResult() {
     }
@@ -41,7 +61,18 @@ public class PageResult<T> implements Serializable {
         this.total = total;
         this.current = current;
         this.size = size;
-        this.pages = (total + size - 1) / size;
+        this.calculatePages();
+    }
+
+    /**
+     * 计算分页信息
+     */
+    private void calculatePages() {
+        if (total != null && size != null && size > 0) {
+            this.pages = (total + size - 1) / size;
+            this.hasPrevious = current > 1;
+            this.hasNext = current < pages;
+        }
     }
 
     /**

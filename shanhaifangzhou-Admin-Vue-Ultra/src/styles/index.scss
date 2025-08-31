@@ -1,0 +1,114 @@
+// 主样式文件
+@import './variables.scss';
+@import './mixins.scss';
+@import './common.scss';
+@import './theme/index.scss';
+
+// Element Plus 样式覆盖
+.el-menu {
+  border-right: none !important;
+}
+
+.el-menu--collapse {
+  width: 64px;
+}
+
+.el-menu-item.is-active {
+  background-color: var(--el-menu-item-hover-bg-color) !important;
+}
+
+.el-submenu.is-active .el-submenu__title {
+  color: var(--el-menu-active-color) !important;
+}
+
+// 布局样式
+.app-container {
+  padding: 20px;
+  background-color: var(--el-bg-color);
+  min-height: calc(100vh - 84px);
+}
+
+.app-main {
+  flex: 1;
+  overflow: hidden;
+}
+
+// 表格样式
+.table-container {
+  background-color: var(--el-bg-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+// 表单样式
+.form-container {
+  background-color: var(--el-bg-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+// 卡片样式
+.card-container {
+  background-color: var(--el-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+// 按钮组样式
+.button-group {
+  margin-bottom: 20px;
+  
+  .el-button {
+    margin-right: 10px;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// 搜索表单样式
+.search-form {
+  background-color: var(--el-bg-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  .el-form-item {
+    margin-bottom: 18px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// 分页样式
+.pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+// 响应式布局
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
+  }
+  
+  .table-container,
+  .form-container,
+  .search-form {
+    padding: 15px;
+  }
+  
+  .button-group {
+    .el-button {
+      margin-bottom: 10px;
+      margin-right: 0;
+      width: 100%;
+    }
+  }
+}

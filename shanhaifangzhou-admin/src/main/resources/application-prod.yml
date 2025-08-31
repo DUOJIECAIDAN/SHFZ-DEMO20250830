@@ -1,0 +1,27 @@
+# 生产环境配置
+spring:
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/shanhaifangzhou_prod?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+  
+  # Redis配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:2}
+
+# 日志配置
+logging:
+  level:
+    com.shanhaifangzhou: info
+    org.springframework.security: warn
+    org.springframework.web: warn
+    org.springframework.cache: warn
+    com.baomidou.mybatisplus: warn
+  file:
+    max-size: 100MB
+    max-history: 30
