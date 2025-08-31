@@ -1,7 +1,8 @@
 package com.shanhaifangzhou.admin.user.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shanhaifangzhou.base.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,12 @@ import java.util.List;
 public class SysUser extends BaseEntity {
 
     /**
+     * 用户ID
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    /**
      * 用户名
      */
     @TableField("username")
@@ -29,6 +36,7 @@ public class SysUser extends BaseEntity {
     /**
      * 密码
      */
+    @JsonIgnore
     @TableField("password")
     private String password;
 
@@ -71,6 +79,7 @@ public class SysUser extends BaseEntity {
     /**
      * 最后登录时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("last_login_time")
     private LocalDateTime lastLoginTime;
 
@@ -103,4 +112,85 @@ public class SysUser extends BaseEntity {
      */
     @TableField(exist = false)
     private String deptName;
+
+    /**
+     * 岗位ID
+     */
+    @TableField("post_id")
+    private Long postId;
+
+    /**
+     * 岗位名称（非数据库字段）
+     */
+    @TableField(exist = false)
+    private String postName;
+
+    /**
+     * 用户类型（0：系统用户，1：业务用户）
+     */
+    @TableField("user_type")
+    private Integer userType;
+
+    /**
+     * 登录类型（0：用户名密码，1：手机号，2：邮箱）
+     */
+    @TableField("login_type")
+    private Integer loginType;
+
+    /**
+     * 是否首次登录（0：否，1：是）
+     */
+    @TableField("is_first_login")
+    private Integer isFirstLogin;
+
+    /**
+     * 密码错误次数
+     */
+    @TableField("password_error_count")
+    private Integer passwordErrorCount;
+
+    /**
+     * 密码错误时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @TableField("password_error_time")
+    private LocalDateTime passwordErrorTime;
+
+    /**
+     * 账号锁定时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @TableField("lock_time")
+    private LocalDateTime lockTime;
+
+    /**
+     * 账号锁定原因
+     */
+    @TableField("lock_reason")
+    private String lockReason;
+
+    /**
+     * 在线状态（0：离线，1：在线）
+     */
+    @TableField("online_status")
+    private Integer onlineStatus;
+
+    /**
+     * 最后活跃时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @TableField("last_active_time")
+    private LocalDateTime lastActiveTime;
+
+    /**
+     * 用户来源（0：系统创建，1：注册，2：导入）
+     */
+    @TableField("user_source")
+    private Integer userSource;
+
+    /**
+     * 扩展字段
+     */
+    @TableField("ext_data")
+    private String extData;
 }
