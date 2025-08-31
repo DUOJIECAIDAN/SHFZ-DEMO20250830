@@ -1,0 +1,142 @@
+// SCSS混入文件
+
+// 清除浮动
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// 文本溢出省略号
+@mixin text-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// 居中定位
+@mixin center($type: 'both') {
+  position: absolute;
+  
+  @if $type == 'both' {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if $type == 'horizontal' {
+    left: 50%;
+    transform: translateX(-50%);
+  } @else if $type == 'vertical' {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+// 弹性布局
+@mixin flex($direction: 'row', $justify: 'flex-start', $align: 'stretch', $wrap: 'nowrap') {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+// 响应式断点
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: 575.98px) { @content; }
+  } @else if $breakpoint == 'sm' {
+    @media (min-width: 576px) and (max-width: 767.98px) { @content; }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: 768px) and (max-width: 991.98px) { @content; }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: 992px) and (max-width: 1199.98px) { @content; }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: 1200px) { @content; }
+  }
+}
+
+// 阴影效果
+@mixin box-shadow($level: 1) {
+  @if $level == 1 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  } @else if $level == 2 {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.08);
+  } @else if $level == 3 {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// 过渡动画
+@mixin transition($properties: 'all', $duration: 0.3s, $timing: ease) {
+  transition: $properties $duration $timing;
+}
+
+// 按钮样式
+@mixin button-style($type: 'primary') {
+  @if $type == 'primary' {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+  } @else if $type == 'success' {
+    background-color: var(--success-color);
+    color: white;
+    border: 1px solid var(--success-color);
+  } @else if $type == 'warning' {
+    background-color: var(--warning-color);
+    color: white;
+    border: 1px solid var(--warning-color);
+  } @else if $type == 'danger' {
+    background-color: var(--danger-color);
+    color: white;
+    border: 1px solid var(--danger-color);
+  }
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+// 卡片样式
+@mixin card-style {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--box-shadow-light);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+// 表格样式
+@mixin table-style {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color-light);
+  }
+  
+  th {
+    background-color: var(--bg-color-page);
+    font-weight: 600;
+    color: var(--text-color-primary);
+  }
+  
+  tr:hover {
+    background-color: var(--bg-color-page);
+  }
+}

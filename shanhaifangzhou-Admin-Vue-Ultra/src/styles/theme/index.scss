@@ -1,0 +1,407 @@
+// 主题样式文件
+
+// 浅色主题（默认）
+[data-theme='light'] {
+  // 背景色
+  --bg-color: #ffffff;
+  --bg-color-page: #f2f3f5;
+  --bg-color-overlay: #ffffff;
+  --bg-color-secondary: #fafafa;
+  --bg-color-tertiary: #f5f5f5;
+  
+  // 文字色
+  --text-color-primary: #303133;
+  --text-color-regular: #606266;
+  --text-color-secondary: #909399;
+  --text-color-placeholder: #c0c4cc;
+  --text-color-disabled: #c0c4cc;
+  
+  // 边框色
+  --border-color-base: #dcdfe6;
+  --border-color-light: #e4e7ed;
+  --border-color-lighter: #ebeef5;
+  --border-color-extra-light: #f2f6fc;
+  --border-color-dark: #c0c4cc;
+  
+  // 阴影
+  --box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  --box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.12);
+  --box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  --box-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  // 菜单
+  --menu-bg-color: #ffffff;
+  --menu-text-color: #303133;
+  --menu-active-color: #409eff;
+  --menu-hover-bg-color: #f5f7fa;
+  --menu-hover-text-color: #409eff;
+  
+  // 头部
+  --header-bg-color: #ffffff;
+  --header-text-color: #303133;
+  --header-border-color: #e4e7ed;
+  
+  // 侧边栏
+  --sidebar-bg-color: #304156;
+  --sidebar-text-color: #bfcbd9;
+  --sidebar-active-color: #409eff;
+  --sidebar-hover-bg-color: #263445;
+  --sidebar-hover-text-color: #ffffff;
+  
+  // 表格
+  --table-bg-color: #ffffff;
+  --table-header-bg-color: #fafafa;
+  --table-border-color: #ebeef5;
+  --table-hover-bg-color: #f5f7fa;
+  --table-stripe-bg-color: #fafafa;
+  
+  // 表单
+  --form-bg-color: #ffffff;
+  --form-border-color: #dcdfe6;
+  --form-focus-border-color: #409eff;
+  --form-disabled-bg-color: #f5f7fa;
+  --form-disabled-text-color: #c0c4cc;
+  
+  // 按钮
+  --btn-primary-bg: #409eff;
+  --btn-primary-border: #409eff;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover-bg: #66b1ff;
+  --btn-primary-hover-border: #66b1ff;
+  
+  --btn-success-bg: #67c23a;
+  --btn-success-border: #67c23a;
+  --btn-success-text: #ffffff;
+  --btn-success-hover-bg: #85ce61;
+  --btn-success-hover-border: #85ce61;
+  
+  --btn-warning-bg: #e6a23c;
+  --btn-warning-border: #e6a23c;
+  --btn-warning-text: #ffffff;
+  --btn-warning-hover-bg: #ebb563;
+  --btn-warning-hover-border: #ebb563;
+  
+  --btn-danger-bg: #f56c6c;
+  --btn-danger-border: #f56c6c;
+  --btn-danger-text: #ffffff;
+  --btn-danger-hover-bg: #f78989;
+  --btn-danger-hover-border: #f78989;
+  
+  --btn-info-bg: #909399;
+  --btn-info-border: #909399;
+  --btn-info-text: #ffffff;
+  --btn-info-hover-bg: #a6a9ad;
+  --btn-info-hover-border: #a6a9ad;
+  
+  // 卡片
+  --card-bg-color: #ffffff;
+  --card-border-color: #ebeef5;
+  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  // 模态框
+  --modal-bg-color: #ffffff;
+  --modal-mask-color: rgba(0, 0, 0, 0.5);
+  --modal-header-bg-color: #f5f7fa;
+  --modal-footer-bg-color: #f5f7fa;
+  
+  // 通知
+  --notification-bg-color: #ffffff;
+  --notification-border-color: #ebeef5;
+  --notification-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  // 工具提示
+  --tooltip-bg-color: #303133;
+  --tooltip-text-color: #ffffff;
+  --tooltip-border-color: #303133;
+  
+  // 加载
+  --loading-bg-color: rgba(255, 255, 255, 0.9);
+  --loading-text-color: #409eff;
+  
+  // 滚动条
+  --scrollbar-track-color: #f1f1f1;
+  --scrollbar-thumb-color: #c1c1c1;
+  --scrollbar-thumb-hover-color: #a8a8a8;
+}
+
+// 深色主题
+[data-theme='dark'] {
+  // 背景色
+  --bg-color: #141414;
+  --bg-color-page: #0a0a0a;
+  --bg-color-overlay: #1d1e1f;
+  --bg-color-secondary: #1f1f1f;
+  --bg-color-tertiary: #262626;
+  
+  // 文字色
+  --text-color-primary: #e5eaf3;
+  --text-color-regular: #cfd3dc;
+  --text-color-secondary: #a3a6ad;
+  --text-color-placeholder: #8d9095;
+  --text-color-disabled: #8d9095;
+  
+  // 边框色
+  --border-color-base: #4c4d4f;
+  --border-color-light: #414243;
+  --border-color-lighter: #363637;
+  --border-color-extra-light: #2b2b2c;
+  --border-color-dark: #6b6b6b;
+  
+  // 阴影
+  --box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba(0, 0, 0, 0.2);
+  --box-shadow-dark: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba(0, 0, 0, 0.3);
+  --box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  --box-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  // 菜单
+  --menu-bg-color: #1f1f1f;
+  --menu-text-color: #e5eaf3;
+  --menu-active-color: #409eff;
+  --menu-hover-bg-color: #262626;
+  --menu-hover-text-color: #409eff;
+  
+  // 头部
+  --header-bg-color: #1f1f1f;
+  --header-text-color: #e5eaf3;
+  --header-border-color: #414243;
+  
+  // 侧边栏
+  --sidebar-bg-color: #001529;
+  --sidebar-text-color: #a6adb4;
+  --sidebar-active-color: #1890ff;
+  --sidebar-hover-bg-color: #002140;
+  --sidebar-hover-text-color: #ffffff;
+  
+  // 表格
+  --table-bg-color: #1f1f1f;
+  --table-header-bg-color: #262626;
+  --table-border-color: #414243;
+  --table-hover-bg-color: #262626;
+  --table-stripe-bg-color: #2a2a2a;
+  
+  // 表单
+  --form-bg-color: #1f1f1f;
+  --form-border-color: #4c4d4f;
+  --form-focus-border-color: #409eff;
+  --form-disabled-bg-color: #262626;
+  --form-disabled-text-color: #8d9095;
+  
+  // 按钮
+  --btn-primary-bg: #177ddc;
+  --btn-primary-border: #177ddc;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover-bg: #1890ff;
+  --btn-primary-hover-border: #1890ff;
+  
+  --btn-success-bg: #49aa19;
+  --btn-success-border: #49aa19;
+  --btn-success-text: #ffffff;
+  --btn-success-hover-bg: #52c41a;
+  --btn-success-hover-border: #52c41a;
+  
+  --btn-warning-bg: #d89614;
+  --btn-warning-border: #d89614;
+  --btn-warning-text: #ffffff;
+  --btn-warning-hover-bg: #faad14;
+  --btn-warning-hover-border: #faad14;
+  
+  --btn-danger-bg: #a61d24;
+  --btn-danger-border: #a61d24;
+  --btn-danger-text: #ffffff;
+  --btn-danger-hover-bg: #c1353d;
+  --btn-danger-hover-border: #c1353d;
+  
+  --btn-info-bg: #642ab5;
+  --btn-info-border: #642ab5;
+  --btn-info-text: #ffffff;
+  --btn-info-hover-bg: #722ed1;
+  --btn-info-hover-border: #722ed1;
+  
+  // 卡片
+  --card-bg-color: #1f1f1f;
+  --card-border-color: #414243;
+  --card-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  
+  // 模态框
+  --modal-bg-color: #1f1f1f;
+  --modal-mask-color: rgba(0, 0, 0, 0.7);
+  --modal-header-bg-color: #262626;
+  --modal-footer-bg-color: #262626;
+  
+  // 通知
+  --notification-bg-color: #1f1f1f;
+  --notification-border-color: #414243;
+  --notification-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  
+  // 工具提示
+  --tooltip-bg-color: #1f1f1f;
+  --tooltip-text-color: #e5eaf3;
+  --tooltip-border-color: #414243;
+  
+  // 加载
+  --loading-bg-color: rgba(20, 20, 20, 0.9);
+  --loading-text-color: #409eff;
+  
+  // 滚动条
+  --scrollbar-track-color: #2a2a2a;
+  --scrollbar-thumb-color: #4c4d4f;
+  --scrollbar-thumb-hover-color: #6b6b6b;
+}
+
+// 主题切换动画
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+// 主题切换按钮样式
+.theme-switch {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background-color: var(--bg-color-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--text-color-primary);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  &.dark::before {
+    transform: translateX(20px);
+  }
+  
+  .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-color-secondary);
+    
+    &.sun {
+      left: 6px;
+    }
+    
+    &.moon {
+      right: 6px;
+    }
+  }
+}
+
+// 主题相关组件样式
+.theme-aware {
+  background-color: var(--bg-color);
+  color: var(--text-color-primary);
+  border-color: var(--border-color-base);
+}
+
+.theme-card {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--card-border-color);
+  box-shadow: var(--card-shadow);
+}
+
+.theme-table {
+  background-color: var(--table-bg-color);
+  
+  th {
+    background-color: var(--table-header-bg-color);
+    color: var(--text-color-primary);
+    border-color: var(--table-border-color);
+  }
+  
+  td {
+    border-color: var(--table-border-color);
+  }
+  
+  tr:hover {
+    background-color: var(--table-hover-bg-color);
+  }
+}
+
+.theme-form {
+  .el-input__inner,
+  .el-textarea__inner {
+    background-color: var(--form-bg-color);
+    border-color: var(--form-border-color);
+    color: var(--text-color-primary);
+    
+    &:focus {
+      border-color: var(--form-focus-border-color);
+    }
+    
+    &:disabled {
+      background-color: var(--form-disabled-bg-color);
+      color: var(--form-disabled-text-color);
+    }
+  }
+  
+  .el-form-item__label {
+    color: var(--text-color-primary);
+  }
+}
+
+.theme-button {
+  &.el-button--primary {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-border);
+    color: var(--btn-primary-text);
+    
+    &:hover {
+      background-color: var(--btn-primary-hover-bg);
+      border-color: var(--btn-primary-hover-border);
+    }
+  }
+  
+  &.el-button--success {
+    background-color: var(--btn-success-bg);
+    border-color: var(--btn-success-border);
+    color: var(--btn-success-text);
+    
+    &:hover {
+      background-color: var(--btn-success-hover-bg);
+      border-color: var(--btn-success-hover-border);
+    }
+  }
+  
+  &.el-button--warning {
+    background-color: var(--btn-warning-bg);
+    border-color: var(--btn-warning-border);
+    color: var(--btn-warning-text);
+    
+    &:hover {
+      background-color: var(--btn-warning-hover-bg);
+      border-color: var(--btn-warning-hover-border);
+    }
+  }
+  
+  &.el-button--danger {
+    background-color: var(--btn-danger-bg);
+    border-color: var(--btn-danger-border);
+    color: var(--btn-danger-text);
+    
+    &:hover {
+      background-color: var(--btn-danger-hover-bg);
+      border-color: var(--btn-danger-hover-border);
+    }
+  }
+  
+  &.el-button--info {
+    background-color: var(--btn-info-bg);
+    border-color: var(--btn-info-border);
+    color: var(--btn-info-text);
+    
+    &:hover {
+      background-color: var(--btn-info-hover-bg);
+      border-color: var(--btn-info-hover-border);
+    }
+  }
+}
