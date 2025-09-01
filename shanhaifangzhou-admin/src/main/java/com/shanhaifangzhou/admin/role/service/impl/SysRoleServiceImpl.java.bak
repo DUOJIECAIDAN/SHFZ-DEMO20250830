@@ -1,0 +1,403 @@
+package com.shanhaifangzhou.admin.role.service.impl;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shanhaifangzhou.admin.role.entity.SysRole;
+import com.shanhaifangzhou.admin.role.dto.RoleQueryDTO;
+import com.shanhaifangzhou.admin.role.dto.RoleCreateDTO;
+import com.shanhaifangzhou.admin.role.dto.RoleUpdateDTO;
+import com.shanhaifangzhou.admin.role.mapper.SysRoleMapper;
+import com.shanhaifangzhou.admin.role.service.SysRoleService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 系统角色服务实现类
+ *
+ * @author shanhaifangzhou
+ * @since 2024-01-01
+ */
+@Slf4j
+@Service
+public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
+
+    @Override
+    public IPage<SysRole> getRolePage(RoleQueryDTO queryDTO) {
+        Page<SysRole> page = new Page<>(queryDTO.getCurrent(), queryDTO.getSize());
+        return baseMapper.selectRolePage(page, queryDTO);
+    }
+
+    @Override
+    public SysRole getRoleByRoleCode(String roleCode) {
+        if (StrUtil.isBlank(roleCode)) {
+            return null;
+        }
+        return baseMapper.selectByRoleCode(roleCode);
+    }
+
+    @Override
+    public SysRole getRoleByRoleName(String roleName) {
+        if (StrUtil.isBlank(roleName)) {
+            return null;
+        }
+        return baseMapper.selectByRoleName(roleName);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean createRole(RoleCreateDTO createDTO) {
+        // 检查角色编码唯一性
+        if (!checkRoleCodeUnique(createDTO.getRoleCode(), null)) {
+            throw new RuntimeException("角色编码已存在");
+        }
+
+        // 检查角色名称唯一性
+        if (!checkRoleNameUnique(createDTO.getRoleName(), null)) {
+            throw new RuntimeException("角色名称已存在");
+        }
+
+        // 创建角色实体
+        SysRole role = new SysRole();
+        BeanUtil.copyProperties(createDTO, role);
+        
+        // 设置默认值
+        role.setStatus(createDTO.getStatus() != null ? createDTO.getStatus() : 1);
+        role.setRoleType(createDTO.getRoleType() != null ? createDTO.getRoleType() : 1);
+        role.setRoleLevel(createDTO.getRoleLevel() != null ? createDTO.getRoleLevel() : 4);
+        role.setDataScope(createDTO.getDataScope() != null ? createDTO.getDataScope() : 5);
+        role.setSort(createDTO.getSort() != null ? createDTO.getSort() : 0);
+        role.setIsSystem(0);
+        role.setIsDeletable(1);
+        role.setIsEditable(1);
+
+        // 保存角色
+        boolean success = save(role);
+        if (success) {
+            // 分配菜单权限
+            if (createDTO.getMenuIds() != null && !createDTO.getMenuIds().isEmpty()) {
+                assignRoleMenus(role.getId(), createDTO.getMenuIds());
+            }
+            
+            // 分配数据权限
+            if (createDTO.getDeptIds() != null && !createDTO.getDeptIds().isEmpty()) {
+                assignRoleDepts(role.getId(), createDTO.getDeptIds());
+            }
+        }
+        
+        return success;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateRole(RoleUpdateDTO updateDTO) {
+        // 检查角色是否存在
+        SysRole existingRole = getById(updateDTO.getId());
+        if (existingRole == null) {
+            throw new RuntimeException("角色不存在");
+        }
+
+        // 检查是否为系统内置角色
+        if (existingRole.getIsSystem() == 1) {
+            throw new RuntimeException("系统内置角色不能修改");
+        }
+
+        // 检查角色编码唯一性
+        if (!checkRoleCodeUnique(updateDTO.getRoleCode(), updateDTO.getId())) {
+            throw new RuntimeException("角色编码已存在");
+        }
+
+        // 检查角色名称唯一性
+        if (!checkRoleNameUnique(updateDTO.getRoleName(), updateDTO.getId())) {
+            throw new RuntimeException("角色名称已存在");
+        }
+
+        // 更新角色信息
+        SysRole role = new SysRole();
+        BeanUtil.copyProperties(updateDTO, role);
+        role.setUpdateTime(LocalDateTime.now());
+
+        // 更新角色
+        boolean success = updateById(role);
+        if (success) {
+            // 重新分配菜单权限
+            if (updateDTO.getMenuIds() != null) {
+                assignRoleMenus(updateDTO.getId(), updateDTO.getMenuIds());
+            }
+            
+            // 重新分配数据权限
+            if (updateDTO.getDeptIds() != null) {
+                assignRoleDepts(updateDTO.getId(), updateDTO.getDeptIds());
+            }
+        }
+        
+        return success;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteRole(Long id) {
+        if (id == null) {
+            return false;
+        }
+        
+        // 检查角色是否存在
+        SysRole role = getById(id);
+        if (role == null) {
+            return false;
+        }
+        
+        // 检查是否为系统内置角色
+        if (role.getIsSystem() == 1) {
+            throw new RuntimeException("系统内置角色不能删除");
+        }
+        
+        // 检查是否有关联用户
+        List<SysRole> userRoles = getRolesByUserId(id);
+        if (userRoles != null && !userRoles.isEmpty()) {
+            throw new RuntimeException("角色下存在用户，不能删除");
+        }
+        
+        return removeById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean batchDeleteRoles(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return false;
+        }
+        
+        // 检查是否包含系统内置角色
+        List<SysRole> roles = listByIds(ids);
+        for (SysRole role : roles) {
+            if (role.getIsSystem() == 1) {
+                throw new RuntimeException("系统内置角色不能删除");
+            }
+        }
+        
+        return removeByIds(ids);
+    }
+
+    @Override
+    public boolean updateRoleStatus(Long id, Integer status) {
+        if (id == null || status == null) {
+            return false;
+        }
+        
+        // 检查是否为系统内置角色
+        SysRole role = getById(id);
+        if (role != null && role.getIsSystem() == 1) {
+            throw new RuntimeException("系统内置角色状态不能修改");
+        }
+        
+        return baseMapper.updateRoleStatus(id, status) > 0;
+    }
+
+    @Override
+    public boolean updateRoleSort(Long id, Integer sort) {
+        if (id == null || sort == null) {
+            return false;
+        }
+        
+        return baseMapper.updateRoleSort(id, sort) > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean assignRoleMenus(Long roleId, List<Long> menuIds) {
+        if (roleId == null) {
+            return false;
+        }
+        
+        // TODO: 实现角色菜单分配逻辑，需要调用角色菜单关联表的Mapper
+        // 这里先返回true，后续完善
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean assignRoleDepts(Long roleId, List<Long> deptIds) {
+        if (roleId == null) {
+            return false;
+        }
+        
+        // TODO: 实现角色部门分配逻辑，需要调用角色部门关联表的Mapper
+        // 这里先返回true，后续完善
+        return true;
+    }
+
+    @Override
+    public List<Long> getRoleMenuIds(Long roleId) {
+        if (roleId == null) {
+            return null;
+        }
+        
+        // TODO: 实现获取角色菜单ID列表逻辑
+        return null;
+    }
+
+    @Override
+    public List<Long> getRoleDeptIds(Long roleId) {
+        if (roleId == null) {
+            return null;
+        }
+        
+        // TODO: 实现获取角色部门ID列表逻辑
+        return null;
+    }
+
+    @Override
+    public List<SysRole> getRolesByUserId(Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        return baseMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public List<SysRole> getRolesByMenuId(Long menuId) {
+        if (menuId == null) {
+            return null;
+        }
+        return baseMapper.selectByMenuId(menuId);
+    }
+
+    @Override
+    public List<SysRole> getRolesByDeptId(Long deptId) {
+        if (deptId == null) {
+            return null;
+        }
+        return baseMapper.selectByDeptId(deptId);
+    }
+
+    @Override
+    public List<SysRole> getEnabledRoles() {
+        return baseMapper.selectEnabledRoles();
+    }
+
+    @Override
+    public List<SysRole> getSystemRoles() {
+        return baseMapper.selectSystemRoles();
+    }
+
+    @Override
+    public List<SysRole> getBusinessRoles() {
+        return baseMapper.selectBusinessRoles();
+    }
+
+    @Override
+    public boolean checkRoleCodeUnique(String roleCode, Long excludeId) {
+        if (StrUtil.isBlank(roleCode)) {
+            return false;
+        }
+        
+        return baseMapper.checkRoleCodeUnique(roleCode, excludeId) == 0;
+    }
+
+    @Override
+    public boolean checkRoleNameUnique(String roleName, Long excludeId) {
+        if (StrUtil.isBlank(roleName)) {
+            return false;
+        }
+        
+        return baseMapper.checkRoleNameUnique(roleName, excludeId) == 0;
+    }
+
+    @Override
+    public Map<String, Object> getRoleStats() {
+        List<Map<String, Object>> stats = baseMapper.selectRoleStats();
+        if (stats != null && !stats.isEmpty()) {
+            return stats.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getRoleUserStats() {
+        return baseMapper.selectRoleUserStats();
+    }
+
+    @Override
+    public Map<String, Object> importRoles(List<Map<String, Object>> roleDataList) {
+        // TODO: 实现角色数据导入逻辑
+        Map<String, Object> result = new java.util.HashMap<>();
+        result.put("success", 0);
+        result.put("failure", 0);
+        result.put("message", "导入功能待实现");
+        return result;
+    }
+
+    @Override
+    public List<SysRole> exportRoles(RoleQueryDTO queryDTO) {
+        // TODO: 实现角色数据导出逻辑
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getRoleTemplate() {
+        // TODO: 实现角色模板数据逻辑
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean copyRole(Long sourceRoleId, String newRoleName, String newRoleCode) {
+        if (sourceRoleId == null || StrUtil.isBlank(newRoleName) || StrUtil.isBlank(newRoleCode)) {
+            return false;
+        }
+        
+        // 检查新角色名称和编码是否唯一
+        if (!checkRoleNameUnique(newRoleName, null)) {
+            throw new RuntimeException("角色名称已存在");
+        }
+        if (!checkRoleCodeUnique(newRoleCode, null)) {
+            throw new RuntimeException("角色编码已存在");
+        }
+        
+        // 获取源角色信息
+        SysRole sourceRole = getById(sourceRoleId);
+        if (sourceRole == null) {
+            throw new RuntimeException("源角色不存在");
+        }
+        
+        // 创建新角色
+        SysRole newRole = new SysRole();
+        BeanUtil.copyProperties(sourceRole, newRole);
+        newRole.setId(null);
+        newRole.setRoleName(newRoleName);
+        newRole.setRoleCode(newRoleCode);
+        newRole.setRoleDesc("复制自：" + sourceRole.getRoleName());
+        newRole.setIsSystem(0);
+        newRole.setIsDeletable(1);
+        newRole.setIsEditable(1);
+        newRole.setCreateTime(LocalDateTime.now());
+        newRole.setUpdateTime(LocalDateTime.now());
+        
+        // 保存新角色
+        boolean success = save(newRole);
+        if (success) {
+            // 复制菜单权限
+            List<Long> menuIds = getRoleMenuIds(sourceRoleId);
+            if (menuIds != null && !menuIds.isEmpty()) {
+                assignRoleMenus(newRole.getId(), menuIds);
+            }
+            
+            // 复制数据权限
+            List<Long> deptIds = getRoleDeptIds(sourceRoleId);
+            if (deptIds != null && !deptIds.isEmpty()) {
+                assignRoleDepts(newRole.getId(), deptIds);
+            }
+        }
+        
+        return success;
+    }
+}
