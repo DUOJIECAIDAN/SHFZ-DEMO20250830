@@ -7,10 +7,10 @@
 
     <groupId>com.shanhaifangzhou</groupId>
     <artifactId>shanhaifangzhou-admin-utral</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <name>ShanHaiFangZhou-Admin-Utral</name>
-    <description>山海方舟企业级中后台管理系统</description>
+    <description>山海方舟企业级中后台管理系统 v2.0 - 基于Sa-Token的权限管理系统</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -19,13 +19,18 @@
         <spring-boot.version>3.3.0</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <sa-token.version>1.40.0</sa-token.version>
         <jetcache.version>2.7.4</jetcache.version>
         <redisson.version>3.27.1</redisson.version>
         <hutool.version>5.8.26</hutool.version>
-        <jwt.version>0.12.5</jwt.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <mysql.version>8.0.36</mysql.version>
-        <druid.version>1.2.23</druid.version>
+        <mysql.version>8.0.33</mysql.version>
+        <hikaricp.version>5.1.0</hikaricp.version>
+        <justauth.version>1.16.6</justauth.version>
+        <cosid.version>1.2.7</cosid.version>
+        <crane4j.version>2.7.0</crane4j.version>
+        <fastexcel.version>0.17.0</fastexcel.version>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
 
     <modules>
@@ -60,6 +65,23 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <!-- Sa-Token -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
             <!-- JetCache -->
             <dependency>
                 <groupId>com.alicp.jetcache</groupId>
@@ -74,28 +96,18 @@
                 <version>${redisson.version}</version>
             </dependency>
 
+            <!-- Caffeine -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
             <!-- Hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- JWT -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-api</artifactId>
-                <version>${jwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-impl</artifactId>
-                <version>${jwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-jackson</artifactId>
-                <version>${jwt.version}</version>
             </dependency>
 
             <!-- Knife4j (Swagger) -->
@@ -112,12 +124,51 @@
                 <version>${mysql.version}</version>
             </dependency>
 
-            <!-- Druid -->
+            <!-- HikariCP -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>${druid.version}</version>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikaricp.version}</version>
             </dependency>
+
+            <!-- JustAuth -->
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>${justauth.version}</version>
+            </dependency>
+
+            <!-- CosId - 暂时注释掉，后续添加 -->
+            <!--
+            <dependency>
+                <groupId>com.cosid</groupId>
+                <artifactId>cosid-core</artifactId>
+                <version>${cosid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cosid</groupId>
+                <artifactId>cosid-spring-boot-starter</artifactId>
+                <version>${cosid.version}</version>
+            </dependency>
+            -->
+
+            <!-- Crane4j - 暂时注释掉，后续添加 -->
+            <!--
+            <dependency>
+                <groupId>cn.crane4j</groupId>
+                <artifactId>crane4j-spring-boot-starter</artifactId>
+                <version>${crane4j.version}</version>
+            </dependency>
+            -->
+
+            <!-- FastExcel - 暂时注释掉，后续添加 -->
+            <!--
+            <dependency>
+                <groupId>org.dhatim</groupId>
+                <artifactId>fastexcel</artifactId>
+                <version>${fastexcel.version}</version>
+            </dependency>
+            -->
         </dependencies>
     </dependencyManagement>
 

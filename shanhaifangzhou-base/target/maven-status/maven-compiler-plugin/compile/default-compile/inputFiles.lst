@@ -1,0 +1,16 @@
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/common/entity/BaseEntity.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/common/result/PageResult.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/common/result/Result.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/common/result/ResultCode.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/config/JetCacheConfig.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/config/MybatisPlusConfig.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/config/SaTokenConfiguration.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/entity/BaseEntity.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/entity/SysDept.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/entity/SysMenu.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/entity/SysRole.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/entity/SysUser.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/exception/BusinessException.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/mybatis/config/MybatisPlusConfig.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/mybatis/page/PageQuery.java
+/workspace/shanhaifangzhou-base/src/main/java/com/shanhaifangzhou/base/utils/SecurityUtils.java

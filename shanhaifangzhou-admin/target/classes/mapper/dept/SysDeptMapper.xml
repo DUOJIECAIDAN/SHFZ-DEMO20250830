@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shanhaifangzhou.admin.dept.mapper.SysDeptMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.shanhaifangzhou.admin.dept.entity.SysDept">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="dept_code" property="deptCode" jdbcType="VARCHAR"/>
+        <result column="dept_type" property="deptType" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="visible" property="visible" jdbcType="TINYINT"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="leader_id" property="leaderId" jdbcType="BIGINT"/>
+        <result column="leader_name" property="leaderName" jdbcType="VARCHAR"/>
+        <result column="leader_phone" property="leaderPhone" jdbcType="VARCHAR"/>
+        <result column="leader_email" property="leaderEmail" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="is_system" property="isSystem" jdbcType="TINYINT"/>
+        <result column="is_deletable" property="isDeletable" jdbcType="TINYINT"/>
+        <result column="is_editable" property="isEditable" jdbcType="TINYINT"/>
+        <result column="dept_icon" property="deptIcon" jdbcType="VARCHAR"/>
+        <result column="dept_color" property="deptColor" jdbcType="VARCHAR"/>
+        <result column="ext_data" property="extData" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+        id, parent_id, dept_name, dept_code, dept_type, status, visible, sort,
+        leader_id, leader_name, leader_phone, leader_email, phone, email, address,
+        description, is_system, is_deletable, is_editable, dept_icon, dept_color,
+        ext_data, create_time, update_time, create_by, update_by, deleted, remark
+    </sql>
+
+    <!-- 分页查询部门列表 -->
+    <select id="selectDeptPage" resultMap="BaseResultMap">
+        SELECT
+            d.id, d.parent_id, d.dept_name, d.dept_code, d.dept_type, d.status, d.visible, d.sort,
+            d.leader_id, d.leader_name, d.leader_phone, d.leader_email, d.phone, d.email, d.address,
+            d.description, d.is_system, d.is_deletable, d.is_editable, d.dept_icon, d.dept_color,
+            d.ext_data, d.create_time, d.update_time, d.create_by, d.update_by, d.remark,
+            p.dept_name as parent_name,
+            COUNT(DISTINCT u.id) as user_count,
+            COUNT(DISTINCT r.id) as role_count
+        FROM sys_dept d
+        LEFT JOIN sys_dept p ON d.parent_id = p.id
+        LEFT JOIN sys_user u ON d.id = u.dept_id AND u.deleted = 0
+        LEFT JOIN sys_role_dept rd ON d.id = rd.dept_id
+        LEFT JOIN sys_role r ON rd.role_id = r.id AND r.deleted = 0
+        <where>
+            d.deleted = 0
+            <if test="query.deptName != null and query.deptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{query.deptName}, '%')
+            </if>
+            <if test="query.deptCode != null and query.deptCode != ''">
+                AND d.dept_code LIKE CONCAT('%', #{query.deptCode}, '%')
+            </if>
+            <if test="query.deptType != null">
+                AND d.dept_type = #{query.deptType}
+            </if>
+            <if test="query.status != null">
+                AND d.status = #{query.status}
+            </if>
+            <if test="query.visible != null">
+                AND d.visible = #{query.visible}
+            </if>
+            <if test="query.parentId != null">
+                AND d.parent_id = #{query.parentId}
+            </if>
+            <if test="query.leaderName != null and query.leaderName != ''">
+                AND d.leader_name LIKE CONCAT('%', #{query.leaderName}, '%')
+            </if>
+            <if test="query.leaderPhone != null and query.leaderPhone != ''">
+                AND d.leader_phone LIKE CONCAT('%', #{query.leaderPhone}, '%')
+            </if>
+            <if test="query.leaderEmail != null and query.leaderEmail != ''">
+                AND d.leader_email LIKE CONCAT('%', #{query.leaderEmail}, '%')
+            </if>
+            <if test="query.phone != null and query.phone != ''">
+                AND d.phone LIKE CONCAT('%', #{query.phone}, '%')
+            </if>
+            <if test="query.email != null and query.email != ''">
+                AND d.email LIKE CONCAT('%', #{query.email}, '%')
+            </if>
+            <if test="query.isSystem != null">
+                AND d.is_system = #{query.isSystem}
+            </if>
+            <if test="query.startTime != null">
+                AND d.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND d.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+        GROUP BY d.id
+        ORDER BY d.sort ASC, d.create_time DESC
+    </select>
+
+    <!-- 查询所有部门列表 -->
+    <select id="selectAllDepts" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据父部门ID查询子部门列表 -->
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND parent_id = #{parentId}
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据角色ID查询部门列表 -->
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        SELECT
+            d.id, d.parent_id, d.dept_name, d.dept_code, d.dept_type, d.status, d.visible, d.sort,
+            d.leader_id, d.leader_name, d.leader_phone, d.leader_email, d.phone, d.email, d.address,
+            d.description, d.is_system, d.is_deletable, d.is_editable, d.dept_icon, d.dept_color
+        FROM sys_dept d
+        INNER JOIN sys_role_dept rd ON d.id = rd.dept_id
+        WHERE d.deleted = 0 AND d.status = 1 AND d.visible = 1 AND rd.role_id = #{roleId}
+        ORDER BY d.sort ASC
+    </select>
+
+    <!-- 根据用户ID查询部门列表 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            d.id, d.parent_id, d.dept_name, d.dept_code, d.dept_type, d.status, d.visible, d.sort,
+            d.leader_id, d.leader_name, d.leader_phone, d.leader_email, d.phone, d.email, d.address,
+            d.description, d.is_system, d.is_deletable, d.is_editable, d.dept_icon, d.dept_color
+        FROM sys_dept d
+        INNER JOIN sys_user_role ur ON d.id = ur.dept_id
+        INNER JOIN sys_role_dept rd ON d.id = rd.dept_id
+        WHERE d.deleted = 0 AND d.status = 1 AND d.visible = 1 AND ur.user_id = #{userId}
+        ORDER BY d.sort ASC
+    </select>
+
+    <!-- 根据部门编码查询部门 -->
+    <select id="selectByDeptCode" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND dept_code = #{deptCode}
+    </select>
+
+    <!-- 根据部门名称查询部门 -->
+    <select id="selectByDeptName" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND dept_name = #{deptName}
+    </select>
+
+    <!-- 查询启用的部门列表 -->
+    <select id="selectEnabledDepts" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND status = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询显示的部门列表 -->
+    <select id="selectVisibleDepts" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND status = 1 AND visible = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询部门树结构 -->
+    <select id="selectDeptTree" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND status = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据条件查询部门数量 -->
+    <select id="selectDeptCount" resultType="long">
+        SELECT COUNT(*)
+        FROM sys_dept d
+        <where>
+            d.deleted = 0
+            <if test="query.deptName != null and query.deptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{query.deptName}, '%')
+            </if>
+            <if test="query.deptCode != null and query.deptCode != ''">
+                AND d.dept_code LIKE CONCAT('%', #{query.deptCode}, '%')
+            </if>
+            <if test="query.deptType != null">
+                AND d.dept_type = #{query.deptType}
+            </if>
+            <if test="query.status != null">
+                AND d.status = #{query.status}
+            </if>
+            <if test="query.visible != null">
+                AND d.visible = #{query.visible}
+            </if>
+            <if test="query.parentId != null">
+                AND d.parent_id = #{query.parentId}
+            </if>
+            <if test="query.leaderName != null and query.leaderName != ''">
+                AND d.leader_name LIKE CONCAT('%', #{query.leaderName}, '%')
+            </if>
+            <if test="query.leaderPhone != null and query.leaderPhone != ''">
+                AND d.leader_phone LIKE CONCAT('%', #{query.leaderPhone}, '%')
+            </if>
+            <if test="query.leaderEmail != null and query.leaderEmail != ''">
+                AND d.leader_email LIKE CONCAT('%', #{query.leaderEmail}, '%')
+            </if>
+            <if test="query.phone != null and query.phone != ''">
+                AND d.phone LIKE CONCAT('%', #{query.phone}, '%')
+            </if>
+            <if test="query.email != null and query.email != ''">
+                AND d.email LIKE CONCAT('%', #{query.email}, '%')
+            </if>
+            <if test="query.isSystem != null">
+                AND d.is_system = #{query.isSystem}
+            </if>
+            <if test="query.startTime != null">
+                AND d.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND d.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询部门统计信息 -->
+    <select id="selectDeptStats" resultType="java.util.Map">
+        SELECT
+            COUNT(*) as totalDepts,
+            SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as enabledDepts,
+            SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as disabledDepts,
+            SUM(CASE WHEN visible = 1 THEN 1 ELSE 0 END) as visibleDepts,
+            SUM(CASE WHEN visible = 0 THEN 1 ELSE 0 END) as hiddenDepts,
+            SUM(CASE WHEN dept_type = 1 THEN 1 ELSE 0 END) as companyDepts,
+            SUM(CASE WHEN dept_type = 2 THEN 1 ELSE 0 END) as departmentDepts,
+            SUM(CASE WHEN dept_type = 3 THEN 1 ELSE 0 END) as groupDepts,
+            SUM(CASE WHEN is_system = 1 THEN 1 ELSE 0 END) as systemDepts,
+            SUM(CASE WHEN is_system = 0 THEN 1 ELSE 0 END) as customDepts
+        FROM sys_dept
+        WHERE deleted = 0
+    </select>
+
+    <!-- 更新部门状态 -->
+    <update id="updateDeptStatus">
+        UPDATE sys_dept
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新部门显示状态 -->
+    <update id="updateDeptVisible">
+        UPDATE sys_dept
+        SET visible = #{visible},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新部门排序 -->
+    <update id="updateDeptSort">
+        UPDATE sys_dept
+        SET sort = #{sort},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 检查部门编码是否唯一 -->
+    <select id="checkDeptCodeUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_dept
+        WHERE deleted = 0 AND dept_code = #{deptCode}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 检查部门名称是否唯一 -->
+    <select id="checkDeptNameUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_dept
+        WHERE deleted = 0 AND dept_name = #{deptName} AND parent_id = #{parentId}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 查询部门的所有子部门ID -->
+    <select id="selectChildrenIds" resultType="long">
+        WITH RECURSIVE dept_tree AS (
+            SELECT id, parent_id FROM sys_dept WHERE id = #{deptId} AND deleted = 0
+            UNION ALL
+            SELECT d.id, d.parent_id FROM sys_dept d
+            INNER JOIN dept_tree dt ON d.parent_id = dt.id
+            WHERE d.deleted = 0
+        )
+        SELECT id FROM dept_tree WHERE id != #{deptId}
+    </select>
+
+    <!-- 查询部门的所有父部门ID -->
+    <select id="selectParentIds" resultType="long">
+        WITH RECURSIVE dept_tree AS (
+            SELECT id, parent_id FROM sys_dept WHERE id = #{deptId} AND deleted = 0
+            UNION ALL
+            SELECT d.id, d.parent_id FROM sys_dept d
+            INNER JOIN dept_tree dt ON d.id = dt.parent_id
+            WHERE d.deleted = 0
+        )
+        SELECT id FROM dept_tree WHERE id != #{deptId}
+    </select>
+
+    <!-- 根据部门类型查询部门列表 -->
+    <select id="selectByDeptType" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_dept
+        WHERE deleted = 0 AND dept_type = #{deptType}
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询部门的最大排序值 -->
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(sort), 0)
+        FROM sys_dept
+        WHERE deleted = 0 AND parent_id = #{parentId}
+    </select>
+
+    <!-- 查询部门用户数量 -->
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_user
+        WHERE deleted = 0 AND dept_id = #{deptId}
+    </select>
+
+    <!-- 查询部门角色数量 -->
+    <select id="selectRoleCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_role_dept
+        WHERE dept_id = #{deptId}
+    </select>
+
+</mapper>
