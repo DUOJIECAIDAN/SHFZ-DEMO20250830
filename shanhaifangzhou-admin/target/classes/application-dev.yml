@@ -1,0 +1,24 @@
+# 开发环境配置
+spring:
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/shanhaifangzhou_dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      database: 1
+
+# 日志配置
+logging:
+  level:
+    com.shanhaifangzhou: debug
+    org.springframework.security: debug
+    org.springframework.web: debug
+    org.springframework.cache: debug
+    com.baomidou.mybatisplus: debug

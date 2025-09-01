@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -52,12 +53,12 @@ public class PageQuery implements Serializable {
     /**
      * 开始时间
      */
-    private String startTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    private String endTime;
+    private LocalDateTime endTime;
 
     /**
      * 获取偏移量

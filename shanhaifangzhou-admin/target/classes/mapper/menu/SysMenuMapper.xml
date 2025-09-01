@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shanhaifangzhou.admin.menu.mapper.SysMenuMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.shanhaifangzhou.admin.menu.entity.SysMenu">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+        <result column="menu_type" property="menuType" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="component" property="component" jdbcType="VARCHAR"/>
+        <result column="query" property="query" jdbcType="VARCHAR"/>
+        <result column="is_frame" property="isFrame" jdbcType="TINYINT"/>
+        <result column="is_cache" property="isCache" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="visible" property="visible" jdbcType="TINYINT"/>
+        <result column="perms" property="perms" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="alias" property="alias" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="external" property="external" jdbcType="TINYINT"/>
+        <result column="new_window" property="newWindow" jdbcType="TINYINT"/>
+        <result column="affix" property="affix" jdbcType="TINYINT"/>
+        <result column="hide_breadcrumb" property="hideBreadcrumb" jdbcType="TINYINT"/>
+        <result column="hide_tab" property="hideTab" jdbcType="TINYINT"/>
+        <result column="hide_menu" property="hideMenu" jdbcType="TINYINT"/>
+        <result column="hide_children" property="hideChildren" jdbcType="TINYINT"/>
+        <result column="hide_search" property="hideSearch" jdbcType="TINYINT"/>
+        <result column="hide_footer" property="hideFooter" jdbcType="TINYINT"/>
+        <result column="hide_setting" property="hideSetting" jdbcType="TINYINT"/>
+        <result column="hide_i18n" property="hideI18n" jdbcType="TINYINT"/>
+        <result column="hide_fullscreen" property="hideFullscreen" jdbcType="TINYINT"/>
+        <result column="hide_refresh" property="hideRefresh" jdbcType="TINYINT"/>
+        <result column="hide_help" property="hideHelp" jdbcType="TINYINT"/>
+        <result column="hide_notice" property="hideNotice" jdbcType="TINYINT"/>
+        <result column="hide_user_info" property="hideUserInfo" jdbcType="TINYINT"/>
+        <result column="hide_logout" property="hideLogout" jdbcType="TINYINT"/>
+        <result column="ext_data" property="extData" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+        id, parent_id, menu_name, menu_type, path, component, query, is_frame, is_cache,
+        status, visible, perms, icon, sort, title, alias, description, external, new_window,
+        affix, hide_breadcrumb, hide_tab, hide_menu, hide_children, hide_search, hide_footer,
+        hide_setting, hide_i18n, hide_fullscreen, hide_refresh, hide_help, hide_notice,
+        hide_user_info, hide_logout, ext_data, create_time, update_time, create_by, update_by,
+        deleted, remark
+    </sql>
+
+    <!-- 分页查询菜单列表 -->
+    <select id="selectMenuPage" resultMap="BaseResultMap">
+        SELECT
+            m.id, m.parent_id, m.menu_name, m.menu_type, m.path, m.component, m.query,
+            m.is_frame, m.is_cache, m.status, m.visible, m.perms, m.icon, m.sort,
+            m.title, m.alias, m.description, m.external, m.new_window, m.affix,
+            m.hide_breadcrumb, m.hide_tab, m.hide_menu, m.hide_children, m.hide_search,
+            m.hide_footer, m.hide_setting, m.hide_i18n, m.hide_fullscreen, m.hide_refresh,
+            m.hide_help, m.hide_notice, m.hide_user_info, m.hide_logout, m.ext_data,
+            m.create_time, m.update_time, m.create_by, m.update_by, m.remark,
+            p.menu_name as parent_name
+        FROM sys_menu m
+        LEFT JOIN sys_menu p ON m.parent_id = p.id
+        <where>
+            m.deleted = 0
+            <if test="query.menuName != null and query.menuName != ''">
+                AND m.menu_name LIKE CONCAT('%', #{query.menuName}, '%')
+            </if>
+            <if test="query.menuType != null and query.menuType != ''">
+                AND m.menu_type = #{query.menuType}
+            </if>
+            <if test="query.status != null">
+                AND m.status = #{query.status}
+            </if>
+            <if test="query.visible != null">
+                AND m.visible = #{query.visible}
+            </if>
+            <if test="query.perms != null and query.perms != ''">
+                AND m.perms LIKE CONCAT('%', #{query.perms}, '%')
+            </if>
+            <if test="query.parentId != null">
+                AND m.parent_id = #{query.parentId}
+            </if>
+            <if test="query.path != null and query.path != ''">
+                AND m.path LIKE CONCAT('%', #{query.path}, '%')
+            </if>
+            <if test="query.component != null and query.component != ''">
+                AND m.component LIKE CONCAT('%', #{query.component}, '%')
+            </if>
+            <if test="query.startTime != null">
+                AND m.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND m.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+        ORDER BY m.sort ASC, m.create_time DESC
+    </select>
+
+    <!-- 查询所有菜单列表 -->
+    <select id="selectAllMenus" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据父菜单ID查询子菜单列表 -->
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND parent_id = #{parentId}
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据角色ID查询菜单列表 -->
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        SELECT
+            m.id, m.parent_id, m.menu_name, m.menu_type, m.path, m.component, m.query,
+            m.is_frame, m.is_cache, m.status, m.visible, m.perms, m.icon, m.sort,
+            m.title, m.alias, m.description, m.external, m.new_window, m.affix,
+            m.hide_breadcrumb, m.hide_tab, m.hide_menu, m.hide_children, m.hide_search,
+            m.hide_footer, m.hide_setting, m.hide_i18n, m.hide_fullscreen, m.hide_refresh,
+            m.hide_help, m.hide_notice, m.hide_user_info, m.hide_logout
+        FROM sys_menu m
+        INNER JOIN sys_role_menu rm ON m.id = rm.menu_id
+        WHERE m.deleted = 0 AND m.status = 1 AND m.visible = 1 AND rm.role_id = #{roleId}
+        ORDER BY m.sort ASC
+    </select>
+
+    <!-- 根据用户ID查询菜单列表 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            m.id, m.parent_id, m.menu_name, m.menu_type, m.path, m.component, m.query,
+            m.is_frame, m.is_cache, m.status, m.visible, m.perms, m.icon, m.sort,
+            m.title, m.alias, m.description, m.external, m.new_window, m.affix,
+            m.hide_breadcrumb, m.hide_tab, m.hide_menu, m.hide_children, m.hide_search,
+            m.hide_footer, m.hide_setting, m.hide_i18n, m.hide_fullscreen, m.hide_refresh,
+            m.hide_help, m.hide_notice, m.hide_user_info, m.hide_logout
+        FROM sys_menu m
+        INNER JOIN sys_role_menu rm ON m.id = rm.menu_id
+        INNER JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        WHERE m.deleted = 0 AND m.status = 1 AND m.visible = 1 AND ur.user_id = #{userId}
+        ORDER BY m.sort ASC
+    </select>
+
+    <!-- 根据权限标识查询菜单 -->
+    <select id="selectByPerms" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND perms = #{perms}
+    </select>
+
+    <!-- 根据路径查询菜单 -->
+    <select id="selectByPath" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND path = #{path}
+    </select>
+
+    <!-- 根据组件路径查询菜单 -->
+    <select id="selectByComponent" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND component = #{component}
+    </select>
+
+    <!-- 查询启用的菜单列表 -->
+    <select id="selectEnabledMenus" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND status = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询显示的菜单列表 -->
+    <select id="selectVisibleMenus" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND status = 1 AND visible = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询菜单树结构 -->
+    <select id="selectMenuTree" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND status = 1
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 根据条件查询菜单数量 -->
+    <select id="selectMenuCount" resultType="long">
+        SELECT COUNT(*)
+        FROM sys_menu m
+        <where>
+            m.deleted = 0
+            <if test="query.menuName != null and query.menuName != ''">
+                AND m.menu_name LIKE CONCAT('%', #{query.menuName}, '%')
+            </if>
+            <if test="query.menuType != null and query.menuType != ''">
+                AND m.menu_type = #{query.menuType}
+            </if>
+            <if test="query.status != null">
+                AND m.status = #{query.status}
+            </if>
+            <if test="query.visible != null">
+                AND m.visible = #{query.visible}
+            </if>
+            <if test="query.perms != null and query.perms != ''">
+                AND m.perms LIKE CONCAT('%', #{query.perms}, '%')
+            </if>
+            <if test="query.parentId != null">
+                AND m.parent_id = #{query.parentId}
+            </if>
+            <if test="query.path != null and query.path != ''">
+                AND m.path LIKE CONCAT('%', #{query.path}, '%')
+            </if>
+            <if test="query.component != null and query.component != ''">
+                AND m.component LIKE CONCAT('%', #{query.component}, '%')
+            </if>
+            <if test="query.startTime != null">
+                AND m.create_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND m.create_time &lt;= #{query.endTime}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询菜单统计信息 -->
+    <select id="selectMenuStats" resultType="java.util.Map">
+        SELECT
+            COUNT(*) as totalMenus,
+            SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as enabledMenus,
+            SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as disabledMenus,
+            SUM(CASE WHEN visible = 1 THEN 1 ELSE 0 END) as visibleMenus,
+            SUM(CASE WHEN visible = 0 THEN 1 ELSE 0 END) as hiddenMenus,
+            SUM(CASE WHEN menu_type = 'M' THEN 1 ELSE 0 END) as directoryMenus,
+            SUM(CASE WHEN menu_type = 'C' THEN 1 ELSE 0 END) as menuMenus,
+            SUM(CASE WHEN menu_type = 'F' THEN 1 ELSE 0 END) as buttonMenus
+        FROM sys_menu
+        WHERE deleted = 0
+    </select>
+
+    <!-- 更新菜单状态 -->
+    <update id="updateMenuStatus">
+        UPDATE sys_menu
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新菜单显示状态 -->
+    <update id="updateMenuVisible">
+        UPDATE sys_menu
+        SET visible = #{visible},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新菜单排序 -->
+    <update id="updateMenuSort">
+        UPDATE sys_menu
+        SET sort = #{sort},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 检查菜单名称是否唯一 -->
+    <select id="checkMenuNameUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_menu
+        WHERE deleted = 0 AND menu_name = #{menuName} AND parent_id = #{parentId}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 检查权限标识是否唯一 -->
+    <select id="checkPermsUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_menu
+        WHERE deleted = 0 AND perms = #{perms}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 检查路径是否唯一 -->
+    <select id="checkPathUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_menu
+        WHERE deleted = 0 AND path = #{path}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 检查组件路径是否唯一 -->
+    <select id="checkComponentUnique" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_menu
+        WHERE deleted = 0 AND component = #{component}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <!-- 查询菜单的所有子菜单ID -->
+    <select id="selectChildrenIds" resultType="long">
+        WITH RECURSIVE menu_tree AS (
+            SELECT id, parent_id FROM sys_menu WHERE id = #{menuId} AND deleted = 0
+            UNION ALL
+            SELECT m.id, m.parent_id FROM sys_menu m
+            INNER JOIN menu_tree mt ON m.parent_id = mt.id
+            WHERE m.deleted = 0
+        )
+        SELECT id FROM menu_tree WHERE id != #{menuId}
+    </select>
+
+    <!-- 查询菜单的所有父菜单ID -->
+    <select id="selectParentIds" resultType="long">
+        WITH RECURSIVE menu_tree AS (
+            SELECT id, parent_id FROM sys_menu WHERE id = #{menuId} AND deleted = 0
+            UNION ALL
+            SELECT m.id, m.parent_id FROM sys_menu m
+            INNER JOIN menu_tree mt ON m.id = mt.parent_id
+            WHERE m.deleted = 0
+        )
+        SELECT id FROM menu_tree WHERE id != #{menuId}
+    </select>
+
+    <!-- 根据菜单类型查询菜单列表 -->
+    <select id="selectByMenuType" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM sys_menu
+        WHERE deleted = 0 AND menu_type = #{menuType}
+        ORDER BY sort ASC, create_time DESC
+    </select>
+
+    <!-- 查询菜单的最大排序值 -->
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(sort), 0)
+        FROM sys_menu
+        WHERE deleted = 0 AND parent_id = #{parentId}
+    </select>
+
+</mapper>
