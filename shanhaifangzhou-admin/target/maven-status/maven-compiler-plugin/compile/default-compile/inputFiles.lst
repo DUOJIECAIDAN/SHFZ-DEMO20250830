@@ -1,6 +1,9 @@
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/ShanHaiFangZhouAdminApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/ShanHaiFangZhouApplication.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/SimpleTestApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/api/entity/SysApiInfo.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/AuthController.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/SystemController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/TestController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/dept/dto/DeptCreateDTO.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/dept/dto/DeptQueryDTO.java
@@ -19,8 +22,6 @@
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/file/entity/SysFile.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/importexport/entity/SysImportExportTask.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/log/entity/SysLogAnalysis.java
-/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/mapper/SysMenuMapper.java
-/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/mapper/SysUserMapper.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/menu/dto/MenuCreateDTO.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/menu/dto/MenuQueryDTO.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/menu/dto/MenuUpdateDTO.java

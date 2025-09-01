@@ -2,7 +2,6 @@ com/shanhaifangzhou/admin/dto/LoginRequest.class
 com/shanhaifangzhou/admin/user/dto/UserUpdateDTO.class
 com/shanhaifangzhou/admin/dept/entity/SysDept.class
 com/shanhaifangzhou/admin/user/entity/SysUser.class
-com/shanhaifangzhou/admin/mapper/SysUserMapper.class
 com/shanhaifangzhou/admin/notice/entity/SysNotice.class
 com/shanhaifangzhou/admin/menu/service/SysMenuService.class
 com/shanhaifangzhou/admin/service/AuthService.class
@@ -39,14 +38,16 @@ com/shanhaifangzhou/admin/dept/dto/DeptUpdateDTO.class
 com/shanhaifangzhou/admin/entity/SysRole.class
 com/shanhaifangzhou/admin/dto/LoginResponse.class
 com/shanhaifangzhou/admin/entity/SysMenu.class
+com/shanhaifangzhou/admin/controller/SystemController.class
 com/shanhaifangzhou/admin/workbench/entity/SysTask.class
 com/shanhaifangzhou/admin/role/service/SysRoleService.class
 com/shanhaifangzhou/admin/service/SysMenuService.class
 com/shanhaifangzhou/admin/user/dto/UserQueryDTO.class
-com/shanhaifangzhou/admin/mapper/SysMenuMapper.class
+com/shanhaifangzhou/admin/SimpleTestApplication.class
 com/shanhaifangzhou/admin/menu/mapper/SysMenuMapper.class
 com/shanhaifangzhou/admin/menu/dto/MenuUpdateDTO.class
 com/shanhaifangzhou/admin/role/entity/SysRole.class
+com/shanhaifangzhou/admin/controller/AuthController.class
 com/shanhaifangzhou/admin/api/entity/SysApiInfo.class
 com/shanhaifangzhou/admin/file/entity/SysFile.class
 com/shanhaifangzhou/admin/monitor/entity/SysOperLog.class
