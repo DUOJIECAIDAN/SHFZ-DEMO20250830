@@ -1,7 +1,10 @@
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/ShanHaiFangZhouAdminApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/ShanHaiFangZhouApplication.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/SimpleApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/SimpleTestApplication.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/StandaloneApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/api/entity/SysApiInfo.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/config/SimpleSaTokenConfig.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/AuthController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/SystemController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/TestController.java
@@ -44,6 +47,7 @@
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/service/AuthService.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/service/SysMenuService.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/service/SysUserService.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/service/impl/AuthServiceImpl.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/user/dto/UserCreateDTO.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/user/dto/UserQueryDTO.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/user/dto/UserUpdateDTO.java
