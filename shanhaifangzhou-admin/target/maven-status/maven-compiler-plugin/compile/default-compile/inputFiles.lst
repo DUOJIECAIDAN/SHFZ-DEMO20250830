@@ -4,7 +4,7 @@
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/SimpleTestApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/StandaloneApplication.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/api/entity/SysApiInfo.java
-/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/config/SimpleSaTokenConfig.java
+/workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/config/MemorySaTokenConfig.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/AuthController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/SystemController.java
 /workspace/shanhaifangzhou-admin/src/main/java/com/shanhaifangzhou/admin/controller/TestController.java

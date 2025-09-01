@@ -49,9 +49,9 @@ com/shanhaifangzhou/admin/menu/mapper/SysMenuMapper.class
 com/shanhaifangzhou/admin/menu/dto/MenuUpdateDTO.class
 com/shanhaifangzhou/admin/role/entity/SysRole.class
 com/shanhaifangzhou/admin/controller/AuthController.class
-com/shanhaifangzhou/admin/config/SimpleSaTokenConfig.class
 com/shanhaifangzhou/admin/StandaloneApplication.class
 com/shanhaifangzhou/admin/api/entity/SysApiInfo.class
+com/shanhaifangzhou/admin/config/MemorySaTokenConfig.class
 com/shanhaifangzhou/admin/file/entity/SysFile.class
 com/shanhaifangzhou/admin/monitor/entity/SysOperLog.class
 com/shanhaifangzhou/admin/message/entity/SysMessage.class
